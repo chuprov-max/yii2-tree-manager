@@ -310,11 +310,13 @@ class Nestable extends Widget
         echo Html::beginTag('div', ['class' => "{$this->id}-nestable-menu"]);
 
         echo Html::beginTag('div', ['class' => 'btn-group']);
+        /*
         echo Html::button(Yii::t('vendor/voskobovich/yii2-tree-manager/widgets/nestable', 'Add node'), [
             'data-toggle' => 'modal',
             'data-target' => "#{$this->id}-new-node-modal",
             'class' => 'btn btn-success'
-        ]);
+        ]); 
+         */
         echo Html::button(Yii::t('vendor/voskobovich/yii2-tree-manager/widgets/nestable', 'Collapse all'), [
             'data-action' => 'collapse-all',
             'class' => 'btn btn-default'
