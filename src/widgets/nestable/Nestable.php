@@ -81,6 +81,11 @@ class Nestable extends Widget
      * @var callable
      */
     public $formFieldsCallable;
+    
+    /**
+     * @var null | integer tree (root) id. If set then display only nodes of this tree
+     */
+    public $treeId = null;
 
     /**
      * Структура меню в php array формате
@@ -120,13 +125,21 @@ class Nestable extends Widget
 
         /** @var ActiveRecord|TreeInterface $model */
         $model = $this->modelClass;
-
-        /** @var ActiveRecord[]|TreeInterface[] $rootNodes */
-        $rootNodes = $model::find()->roots()->all();
-
-        if (!empty($rootNodes[0])) {
+        
+        if ($this->treeId) {
+            $rootNode = $model::findOne($this->treeId);
+            if (!$rootNode || !$rootNode->isRoot()) {
+                throw new InvalidConfigException("'treeId' must be id of root tree node.");
+            }
+        } else {
+            /** @var ActiveRecord[]|TreeInterface[] $rootNodes */
+            $rootNodes = $model::find()->roots()->all();
+            $rootNode = $rootNodes[0];
+        }
+               
+        if (!empty($rootNode)) {
             /** @var ActiveRecord|TreeInterface $items */
-            $items = $rootNodes[0]->populateTree();
+            $items = $rootNode->populateTree();
             $this->_items = $this->prepareItems($items);
         }
     }
